@@ -42,18 +42,7 @@ resource "aws_subnet" "test-prod-pub1" {
 	Project = "My project"
     }
 }
-resource "aws_subnet" "test-prod-pub2" {
-    vpc_id = aws_vpc.test-prodVPC.id
-    cidr_block = "10.2.1.0/24"
-    availability_zone = "us-east-1b"
-    map_public_ip_on_launch = true
-  tags = {
-        Name = "test-prodsubnet-pub2"
-        Owner = "Balaram"
-	Environment = "Dev"
-	Project = "My project"
-    }
-}
+
 
 resource "aws_subnet" "test-prod-priv1" {
     vpc_id = aws_vpc.test-prodVPC.id
@@ -62,19 +51,6 @@ resource "aws_subnet" "test-prod-priv1" {
     map_public_ip_on_launch = true
   tags = {
         Name = "test-prodsubnet-priv1"
-	Owner = "Balaram"
-	Environment = "Dev"
-	Project = "My project"
-    }
-	
-}
-resource "aws_subnet" "test-prod-priv2" {
-    vpc_id = aws_vpc.test-prodVPC.id
-    cidr_block = "10.2.3.0/24"
-    availability_zone = "us-east-1b"
-    map_public_ip_on_launch = true
-  tags = {
-        Name = "test-prodsubnet-priv2"
 	Owner = "Balaram"
 	Environment = "Dev"
 	Project = "My project"
@@ -100,10 +76,6 @@ resource "aws_route_table_association" "test-prodRT" {
     subnet_id = aws_subnet.test-prod-pub1.id
     route_table_id = aws_route_table.test-prodRT-pub.id
 }
-resource "aws_route_table_association" "test-prodRT1" {
-    subnet_id = aws_subnet.test-prod-pub2.id
-    route_table_id = aws_route_table.test-prodRT-pub.id
-}
 
 resource "aws_route_table" "test-prodRT-priv" {
     vpc_id = aws_vpc.test-prodVPC.id
@@ -119,19 +91,15 @@ resource "aws_route_table_association" "test-prodRT-priv1" {
     subnet_id = aws_subnet.test-prod-priv1.id
     route_table_id = aws_route_table.test-prodRT-priv.id
 }
-resource "aws_route_table_association" "test-prodRT-priv2" {
-    subnet_id = aws_subnet.test-prod-priv2.id
-    route_table_id = aws_route_table.test-prodRT-priv.id
-}
 
 resource "aws_security_group" "test-prod-SG" {
   description = "aws_vpc.Allow all inbound traffic"
   vpc_id      =  aws_vpc.test-prodVPC.id
 
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
   
